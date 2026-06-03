@@ -1,0 +1,47 @@
+﻿@OPWebApp.Server_HostAddress = http://localhost:5267
+
+
+GET {{OPWebApp.Server_HostAddress}}/api/player
+
+###
+
+POST {{OPWebApp.Server_HostAddress}}/api/player
+Content-Type: application/json
+
+{
+  "name": "XTerminator",
+  "level": 5,
+  "xp": 2693,
+  "description": "Destroy all humans!"
+}
+
+###
+
+POST {{OPWebApp.Server_HostAddress}}/api/player
+Content-Type: application/json
+
+{
+  "name": "Gordon",
+  "level": 45,
+  "xp": 2699878,
+  "description": "Orange is my favourite color!"
+}
+
+###
+
+GET {{OPWebApp.Server_HostAddress}}/api/player/{6393006f-50f8-418b-a92f-8db75d7edd24}
+
+###
+
+PUT {{OPWebApp.Server_HostAddress}}/api/player/{6393006f-50f8-418b-a92f-8db75d7edd24}
+Content-Type: application/json
+
+{
+  "id": "6393006f-50f8-418b-a92f-8db75d7edd24",
+  "name": "XTerminator",
+  "level": 6,
+  "xp": 789254,
+  "description": "Destroy all humans again!!"
+}
+
+###
