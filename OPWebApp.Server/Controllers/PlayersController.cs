@@ -7,11 +7,11 @@ namespace OPWebApp.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PlayerController : ControllerBase
+    public class PlayersController : ControllerBase
     {
         private readonly PlayerDb _context;
 
-        public PlayerController(PlayerDb context)
+        public PlayersController(PlayerDb context)
         {
             _context = context;
         }
