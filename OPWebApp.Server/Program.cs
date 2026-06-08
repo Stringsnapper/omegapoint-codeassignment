@@ -2,7 +2,23 @@ using Microsoft.EntityFrameworkCore;
 using OPWebApp.Server.Database;
 using OPWebApp.Server.Models;
 
+var allowSpecificOriginsPolicy = "_allowSpecificOrigins";
+
 var builder = WebApplication.CreateBuilder(args);
+
+// Add cross origin requests
+builder.Services.AddCors(options =>
+{
+    // TODO: Add origins to appsettings.json
+    options.AddPolicy(name: allowSpecificOriginsPolicy,
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5173");
+        });
+});
+
+builder.Services.AddHttpLogging(o => { });
+
 // Use in-memory database during development
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddControllers();
@@ -16,6 +32,7 @@ if ( app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.UseCors(allowSpecificOriginsPolicy);
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
