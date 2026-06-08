@@ -1,9 +1,25 @@
-import { useState } from 'react'
+import React, { useState, useEffect } from 'react';
 import joystick from './assets/joystick.png'
 
 import './App.css'
+import type { PlayerProps } from './modules/Player';
+
+
 
 function App() {
+  const [items, setItems] = useState<PlayerProps[]>([]);
+  const [refresh, setRefresh] = useState(false);
+
+  useEffect(() => {
+    console.log("Fetching players...");
+    fetch("http://localhost:5267/api/players", { method: "GET" })
+      .then(response => {
+        return response.json();
+      })
+      .then(data => {
+        setItems(data);
+      })
+  }, [refresh]);
 
   return (
     <>
@@ -17,6 +33,11 @@ function App() {
           <p>
             Manage your players here.
           </p>
+          <ul>
+            {items.map((item, index) => (
+              <li key={index}>{item.name} - {item.level}</li>
+            ))}
+          </ul>
         </div>
         
       </section>
@@ -43,7 +64,7 @@ function App() {
           <a href="https://www.flaticon.com/free-icons/video-game-controller" title="video game controller icons">Video game controller icons created by Hilmy Abiyyu A. - Flaticon</a>
       </section>
     </>
-  )
-}
+  );
+};
 
 export default App
