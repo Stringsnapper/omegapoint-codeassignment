@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using OPWebApp.Server.Database;
 using OPWebApp.Server.Models;
+using OPWebApp.Server.Models.Dtos;
 
 namespace OPWebApp.Server.Controllers
 {
@@ -76,8 +77,9 @@ namespace OPWebApp.Server.Controllers
         // POST: api/Player
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<PlayerModel>> PostPlayerModel(PlayerModel playerModel)
+        public async Task<ActionResult<PlayerModel>> PostPlayerModel(CreatePlayerRequestDto playerDto)
         {
+            var playerModel = new PlayerModel { Name = playerDto.Name, Description = playerDto.Description };
             _context.Players.Add(playerModel);
             await _context.SaveChangesAsync();
 

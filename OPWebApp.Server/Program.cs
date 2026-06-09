@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using OPWebApp.Server.Database;
-using OPWebApp.Server.Models;
 
 var allowSpecificOriginsPolicy = "_allowSpecificOrigins";
 
@@ -13,7 +12,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: allowSpecificOriginsPolicy,
         policy =>
         {
-            policy.WithOrigins("http://localhost:5173");
+            policy.WithOrigins("http://localhost:5173").AllowAnyHeader(); // Ideally this could be restricted to necessary headers
         });
 });
 

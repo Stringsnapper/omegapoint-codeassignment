@@ -45,3 +45,13 @@ Content-Type: application/json
 }
 
 ###
+
+POST {{OPWebApp.Server_HostAddress}}/api/players
+Content-Type: application/json
+
+{
+  "name": "tester",
+  "description": "Something"
+}
+
+###

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OPWebApp.Server.Models
@@ -16,9 +17,9 @@ namespace OPWebApp.Server.Models
     {
         [Key]
         public Guid Id { get; set; }
-        public string Name { get; set; }
-        public int Level { get; set; }
-        public int XP { get; set; }
-        public string Description { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public int Level { get; set; } = 0;
+        public int XP { get; set; } = 0;
+        public string Description { get; set; } = string.Empty;
     }
 }
