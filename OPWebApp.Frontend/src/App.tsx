@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import joystick from './assets/joystick.png'
 
 import './App.css'
-import type { PlayerProps } from './modules/Player';
+import type { PlayerProps } from './interfaces/Player';
+import PlayerForm from './components/PlayerForm';
 
 
 
@@ -21,6 +22,38 @@ function App() {
       })
   }, [refresh]);
 
+  const handleSubmit = async (playerProps: PlayerProps) : Promise<boolean> => {
+    console.debug("Submitting player:", playerProps);
+    var success = false;
+    await fetch("http://localhost:5267/api/players", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(playerProps)
+    })
+    .then(response => {
+      if (response.ok) {
+        console.debug("Player created successfully");
+        setRefresh(!refresh);
+        success = true;
+      }
+      else {
+        console.error("Failed to create player:", response.statusText);
+        success = false;
+      }
+    })
+    return success;
+    
+  }
+
+  var playerProps : PlayerProps = {
+    id: '',
+    name: '',
+    level: 1,
+    xp: 0,
+    description: '',
+  }
   return (
     <>
       <section id="center">
@@ -38,6 +71,9 @@ function App() {
               <li key={index}>{item.name} - {item.level}</li>
             ))}
           </ul>
+        </div>
+        <div>
+          <PlayerForm submitAction={handleSubmit} playerProps={playerProps}/>
         </div>
         
       </section>

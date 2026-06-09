@@ -2,6 +2,7 @@
 
 This is a web application with CRUD capability and a client to present the content.
 ## Tech Stack
-- ASP .NET Core
+- **Backend:** ASP .NET Core
+- **Frontend:** Vite React app with TypeScript
 
 ## Description
