@@ -4,6 +4,7 @@ import joystick from './assets/joystick.png'
 import './App.css'
 import type { PlayerProps } from './interfaces/Player';
 import PlayerForm from './components/PlayerForm';
+import PlayerList from './components/PlayerList';
 
 
 
@@ -66,11 +67,7 @@ function App() {
           <p>
             Manage your players here.
           </p>
-          <ul>
-            {items.map((item, index) => (
-              <li key={index}>{item.name} - {item.level}</li>
-            ))}
-          </ul>
+          <PlayerList players={items}/>
         </div>
         <div>
           <PlayerForm submitAction={handleSubmit} playerProps={playerProps}/>

@@ -16,6 +16,8 @@ const PlayerForm: React.FC<PlayerFormProps> = ({submitAction}) => {
 	const [nameValue, setNameValue] = useState('');
 	const [descriptionValue, setDescriptionValue] = useState('');
 	const [submitDisabled, setSubmitDisabled] = useState(true);
+
+	// Disable submit button if either name or description is empty
 	useEffect(() => {
 		setSubmitDisabled(nameValue.trim() === '' || descriptionValue.trim() === '') 
 			
