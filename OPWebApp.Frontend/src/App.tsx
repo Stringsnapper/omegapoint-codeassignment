@@ -43,9 +43,26 @@ function App() {
         console.error("Failed to create player:", response.statusText);
         success = false;
       }
-    })
+    });
     return success;
     
+  }
+
+  const handleDelete = async (playerId: string) : Promise<boolean> => {
+    var success = false;
+    await fetch(`http://localhost:5267/api/players/${playerId}`, {method: "DELETE"})
+      .then(response =>  {
+        if (response.ok) {
+          console.debug("Player deleted successfully");
+          setRefresh(!refresh);
+          success = true;
+        }
+        else {
+          console.error("Failed to delete player:", response.statusText);
+          success = false;
+        }
+      });
+      return success;
   }
 
   var playerProps : PlayerProps = {
@@ -67,7 +84,7 @@ function App() {
           <p>
             Manage your players here.
           </p>
-          <PlayerList players={items}/>
+          <PlayerList players={items} deleteAction={handleDelete}/>
         </div>
         <div>
           <PlayerForm submitAction={handleSubmit} playerProps={playerProps}/>
