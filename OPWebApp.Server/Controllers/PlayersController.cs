@@ -87,6 +87,7 @@ namespace OPWebApp.Server.Controllers
         }
 
         // DELETE: api/Player/5
+        // TODO: Require authorization
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePlayerModel(Guid id)
         {
