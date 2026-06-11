@@ -20,7 +20,7 @@ namespace OPWebApp.Server.Controllers
         /// <summary>
         /// Returns all players in the database.
         /// </summary>
-        /// <remarks>GET: api/Player</remarks>
+        /// <remarks>GET: api/players</remarks>
         /// <returns>All available Player data or an empty collection if no player data is available.</returns>
         /// <response code="200">Returns a collection of Player data.</response>
         [HttpGet]
@@ -29,7 +29,7 @@ namespace OPWebApp.Server.Controllers
             return await _context.Players.ToListAsync();
         }
 
-        // GET: api/Player/{<GUID>}
+        // GET: api/players/{<GUID>}
         [HttpGet("{id}")]
         public async Task<ActionResult<PlayerModel>> GetPlayerModel(Guid id)
         {
@@ -43,7 +43,7 @@ namespace OPWebApp.Server.Controllers
             return playerModel;
         }
 
-        // PUT: api/Player/5
+        // PUT: api/players/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPlayerModel(Guid id, PlayerModel playerModel)
@@ -74,7 +74,7 @@ namespace OPWebApp.Server.Controllers
             return NoContent();
         }
 
-        // POST: api/Player
+        // POST: api/players
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<PlayerModel>> PostPlayerModel(CreatePlayerRequestDto playerDto)
@@ -86,7 +86,7 @@ namespace OPWebApp.Server.Controllers
             return CreatedAtAction("GetPlayerModel", new { id = playerModel.Id }, playerModel);
         }
 
-        // DELETE: api/Player/5
+        // DELETE: api/players/5
         // TODO: Require authorization
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePlayerModel(Guid id)

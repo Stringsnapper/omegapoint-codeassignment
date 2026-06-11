@@ -55,3 +55,11 @@ Content-Type: application/json
 }
 
 ###
+
+PATCH {{OPWebApp.Server_HostAddress}}/api/players/7d7d02af-c41e-4a13-8cd9-0273dac78601
+Content-Type: application/json
+{
+  "xp": 789254
+}
+
+###
