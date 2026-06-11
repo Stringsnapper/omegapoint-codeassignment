@@ -65,6 +65,31 @@ function App() {
       return success;
   }
 
+  const handleGiveXp = async (playerProps: PlayerProps, amount: number) : Promise<boolean> => {
+    var success = false;
+    var requestProps = playerProps;
+    requestProps.xp += 10;
+    await fetch(`http://localhost:5267/api/players/${playerProps.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type" : "application/json"
+      },
+      body: JSON.stringify(requestProps)
+    })
+    .then(response => {
+      if (response.ok) {
+        console.debug(`Player gained ${amount} xp!`);
+        setRefresh(!refresh);
+        success = true;
+      }
+      else {
+        console.error("Failed to give xp to player:", response.statusText);
+        success = false;
+      }
+    });
+    return success;
+  }
+
   var playerProps : PlayerProps = {
     id: '',
     name: '',
@@ -84,7 +109,7 @@ function App() {
           <p>
             Manage your players here.
           </p>
-          <PlayerList players={items} deleteAction={handleDelete}/>
+          <PlayerList players={items} deleteAction={handleDelete} giveXpAction={handleGiveXp}/>
         </div>
         <div>
           <PlayerForm submitAction={handleSubmit} playerProps={playerProps}/>

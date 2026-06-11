@@ -4,6 +4,7 @@ import type { PlayerProps } from "../interfaces/Player";
 interface PlayerCardProps {
 	playerProps: PlayerProps;
 	deleteAction?: (playerId: string) => Promise<boolean>;
+	giveXpAction?: (playerProps: PlayerProps, amount: number) => Promise<boolean>;
 }
 
 const cardStyle: CSSProperties = {
@@ -28,7 +29,7 @@ const cardHeaderStyle: CSSProperties = {
 	paddingLeft: '10px',
 }
 
-const deleteButtonStyle: CSSProperties = {
+const headerButtonStyle: CSSProperties = {
 	marginLeft: 'auto', 
 	marginRight: '10px'
 }
@@ -53,11 +54,18 @@ const PlayerCard: React.FC<PlayerCardProps> = props => {
 		}
 	}
 
+	const handleGiveXp = async () => {
+		if (props.giveXpAction) {
+			await props.giveXpAction(playerProps, 100);
+		}
+	}
+
 	return(
 		<div style={cardStyle}>
 			<div style={cardHeaderStyle}>
 				<h2 style={headerStyle} title={playerProps.name}>{playerProps.name}</h2>
-				<button onClick={handleDelete} style={deleteButtonStyle}>Delete</button>
+				<button onClick={handleGiveXp} style={headerButtonStyle}>Give XP</button>
+				<button onClick={handleDelete} style={headerButtonStyle}>Delete</button>
 			</div>
 			<div>
 				<p>Level: {playerProps.level}</p>
