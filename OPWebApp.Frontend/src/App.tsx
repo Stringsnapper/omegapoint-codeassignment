@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import joystick from './assets/joystick.png'
 
 import './App.css'
@@ -67,10 +67,9 @@ function App() {
 
   const handleGiveXp = async (playerProps: PlayerProps, amount: number) : Promise<boolean> => {
     var success = false;
-    var requestProps = playerProps;
-    requestProps.xp += 10;
-    await fetch(`http://localhost:5267/api/players/${playerProps.id}`, {
-      method: "PUT",
+    var requestProps = {xp: playerProps.xp + 10};
+    await fetch(`http://localhost:5267/api/players/${playerProps.id}/xp`, {
+      method: "PATCH",
       headers: {
         "Content-Type" : "application/json"
       },
@@ -89,6 +88,8 @@ function App() {
     });
     return success;
   }
+
+
 
   var playerProps : PlayerProps = {
     id: '',
