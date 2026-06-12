@@ -13,7 +13,7 @@ This is a web application with CRUD capability and a client to present the conte
 - Sanitize form to prevent XSS attacks
   - could possibly use DOMPurify
 - Prevent form spamming
-  - Rate limit
+  - Rate limit in both frontend and backend
   - Form validation
 - In REST API, validate request dto before transforming and storing.
-- In REST API, use API key to validate the request origin
+- In REST API, use API key to validate the request origin 
