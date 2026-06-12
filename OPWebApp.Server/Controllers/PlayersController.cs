@@ -29,7 +29,7 @@ namespace OPWebApp.Server.Controllers
             return await _context.Players.ToListAsync();
         }
 
-        // GET: api/players/{<GUID>}
+        // GET: api/players/9b624c6f-084a-40e4-98e4-de28e198cd84
         [HttpGet("{id}")]
         public async Task<ActionResult<PlayerModel>> GetPlayerModel(Guid id)
         {
@@ -43,7 +43,8 @@ namespace OPWebApp.Server.Controllers
             return playerModel;
         }
 
-        // PUT: api/players/5
+
+        // PUT: api/players/9b624c6f-084a-40e4-98e4-de28e198cd84
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPlayerModel(Guid id, PlayerModel playerModel)
@@ -74,6 +75,43 @@ namespace OPWebApp.Server.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Endpoint for modifying the player xp value.
+        /// </summary>
+        /// <param name="id">the unique Identifier of the player model</param>
+        /// <param name="dto">Data transfer object to hold the new XP value</param>
+        /// <returns>IActionResult with status 204 on success, or status 404 </returns>
+        // PATCH: api/9b624c6f-084a-40e4-98e4-de28e198cd84/xp
+        [HttpPatch("{id}/xp")]
+        public async Task<IActionResult> ModifyPlayerXp(Guid id, ModifyPlayerXpRequestDto dto)
+        {
+            var playerModel = await _context.Players.FindAsync(id);
+
+            if (playerModel == null)
+            {
+                return NotFound();
+            }
+
+            playerModel.XP = dto.Xp;
+            _context.Entry(playerModel).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!PlayerModelExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return NoContent();
+        }
+
         // POST: api/players
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
@@ -86,7 +124,7 @@ namespace OPWebApp.Server.Controllers
             return CreatedAtAction("GetPlayerModel", new { id = playerModel.Id }, playerModel);
         }
 
-        // DELETE: api/players/5
+        // DELETE: api/players/9b624c6f-084a-40e4-98e4-de28e198cd84
         // TODO: Require authorization
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePlayerModel(Guid id)
