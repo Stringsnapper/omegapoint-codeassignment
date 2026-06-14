@@ -1,10 +1,13 @@
-import { useState, type CSSProperties } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import type { PlayerProps } from "../interfaces/Player";
 
 interface PlayerCardProps {
+	index: number;
 	playerProps: PlayerProps;
+	selectedCardIndex: number;
 	deleteAction?: (playerId: string) => Promise<boolean>;
 	giveXpAction?: (playerProps: PlayerProps, amount: number) => Promise<boolean>;
+	onClickAction?: (index: number, playerProps: PlayerProps) => void;
 }
 
 
@@ -13,13 +16,32 @@ interface PlayerCardProps {
 const PlayerCard: React.FC<PlayerCardProps> = props => {
 
 	const [hover, setHover] = useState(false);
+	const [selected, setSelected] = useState(false);
+
+	useEffect(() => {
+		if (props.selectedCardIndex !== props.index) {
+			setSelected(false);
+		}
+	}, [props.selectedCardIndex])
+
+	function determineBorder () {
+		if(hover) {
+			return "solid #919191af"
+		}
+		if (selected) {
+			return "solid #91919150"
+		}
+
+		return "solid rgba(0, 0, 0, 0)"
+	}
+
 	var playerProps = props.playerProps;
 
 	const cardStyle: CSSProperties = {
 		display: 'flex',
 		flexDirection: 'column',
 		borderRadius: '8px',
-		border: hover ? "solid #91919150" : "solid rgba(0, 0, 0, 0)",
+		border: determineBorder(),
 		marginBottom: '10px',
 		paddingBottom: '10px',
 		backgroundColor: '#91919112',
@@ -66,8 +88,13 @@ const PlayerCard: React.FC<PlayerCardProps> = props => {
 		}
 	}
 
+	const handleClick = (event: React.MouseEvent) => {
+		setSelected(true)
+		props.onClickAction?.(props.index, playerProps);
+	}
+
 	return (
-		<div style={cardStyle} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+		<div style={cardStyle} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)} onClick={handleClick}>
 			<div style={cardHeaderStyle}>
 				<h2 style={headerStyle} title={playerProps.name}>{playerProps.name}</h2>
 				<button onClick={handleGiveXp} style={headerButtonStyle}>Give XP</button>

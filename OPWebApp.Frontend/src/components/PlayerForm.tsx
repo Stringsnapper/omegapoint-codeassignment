@@ -3,25 +3,29 @@ import type { PlayerProps } from "../interfaces/Player";
 
 interface PlayerFormProps {
 	submitAction: (playerProps:PlayerProps) => Promise<boolean>;
+	updateAction: (playerProps:PlayerProps) => Promise<boolean>;
 	playerProps?: PlayerProps;
 }
-var playerProps : PlayerProps = {
-	id: '',
-	name: '',
-	level: 1,
-	xp: 0,
-	description: '',
-}
-const PlayerForm: React.FC<PlayerFormProps> = ({submitAction}) => {
+
+const PlayerForm: React.FC<PlayerFormProps> = (props) => {
 	const [nameValue, setNameValue] = useState('');
 	const [descriptionValue, setDescriptionValue] = useState('');
 	const [submitDisabled, setSubmitDisabled] = useState(true);
+	const [updateDisabled, setUpdateDisabled] = useState(true);
 
 	// Disable submit button if either name or description is empty
 	useEffect(() => {
-		setSubmitDisabled(nameValue.trim() === '' || descriptionValue.trim() === '') 
-			
-	}, [nameValue, descriptionValue]);
+		setSubmitDisabled(props.playerProps!==null || nameValue.trim() === '' || descriptionValue.trim() === '') 
+		setUpdateDisabled(props.playerProps===null || nameValue.trim() === '' || descriptionValue.trim() === '')
+	}, [nameValue, descriptionValue, props.playerProps]);
+
+	useEffect(() => {
+		if (props.playerProps != null) {
+			console.debug("Updating form with playerProps:", props.playerProps);
+			setNameValue(props.playerProps.name);
+			setDescriptionValue(props.playerProps.description);
+		}
+	}, [props.playerProps])
 
 
 	const outerStyle : CSSProperties = {
@@ -64,6 +68,10 @@ const PlayerForm: React.FC<PlayerFormProps> = ({submitAction}) => {
 		borderRadius: '4px',
 		fontFamily: 'monospace, monospace',
 	}
+	const buttonStyle: CSSProperties = {
+		marginLeft: '5px',
+		marginRight: '5px',
+	}
 
 	const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
 		setNameValue(event.target.name === 'name' ? event.target.value : nameValue);
@@ -72,15 +80,24 @@ const PlayerForm: React.FC<PlayerFormProps> = ({submitAction}) => {
 
 	const handleSubmit = async (event: React.SubmitEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		playerProps.name = nameValue;
-		playerProps.description = descriptionValue;
-		var success = await submitAction(playerProps);
+		var success = await props.submitAction({name: nameValue, description: descriptionValue} as PlayerProps);
 		console.debug("Submit action returned:", success);
 		if (success) {
 			setNameValue('');
 			setDescriptionValue('');
 		}
 	};
+
+	const handleUpdatePlayer = async () => {
+		props.playerProps.name = nameValue;
+		props.playerProps.description = descriptionValue;
+		var success = await props.updateAction(props.playerProps);
+		console.debug("Update action returned:", success);
+		if (success) {
+			setNameValue('');
+			setDescriptionValue('');
+		}
+	}
 
 
 	return (
@@ -94,7 +111,8 @@ const PlayerForm: React.FC<PlayerFormProps> = ({submitAction}) => {
 					Description:
 					<textarea value={descriptionValue} onChange={handleInputChange} style={textareaStyle} name="description" />
 				</label>
-				<button disabled={submitDisabled} type="submit">Create Player</button>
+				<button style={buttonStyle} disabled={updateDisabled} type="button" onClick={() => {handleUpdatePlayer()}}>Update Player</button>
+				<button style={buttonStyle} disabled={submitDisabled} type="submit">Create Player</button>
 			</form>
 		</div>
 	)

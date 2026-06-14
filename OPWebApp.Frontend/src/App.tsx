@@ -11,6 +11,7 @@ import PlayerList from './components/PlayerList';
 function App() {
   const [items, setItems] = useState<PlayerProps[]>([]);
   const [refresh, setRefresh] = useState(false);
+  const [currentPlayer, setCurrentPlayer] = useState<PlayerProps>(null);
 
   useEffect(() => {
     console.log("Fetching players...");
@@ -65,6 +66,30 @@ function App() {
       return success;
   }
 
+  const handleUpdatePlayer = async (playerProps: PlayerProps) : Promise<boolean> => {
+    var success = false;
+    await fetch(`http://localhost:5267/api/players/${currentPlayer.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(currentPlayer)
+    })
+    .then(response => {
+      if (response.ok) {
+        console.debug("Player updated successfully");
+        setRefresh(!refresh);
+        success = true;
+      }
+      else {
+        console.error("Failed to update player:", response.statusText);
+        success = false;
+      }
+    });
+    setCurrentPlayer(null);
+    return success;
+  }
+
   const handleGiveXp = async (playerProps: PlayerProps, amount: number) : Promise<boolean> => {
     var success = false;
     var requestProps = {xp: playerProps.xp + 10};
@@ -89,15 +114,6 @@ function App() {
     return success;
   }
 
-
-
-  var playerProps : PlayerProps = {
-    id: '',
-    name: '',
-    level: 1,
-    xp: 0,
-    description: '',
-  }
   return (
     <>
       <section id="center">
@@ -110,10 +126,10 @@ function App() {
           <p>
             Manage your players here.
           </p>
-          <PlayerList players={items} deleteAction={handleDelete} giveXpAction={handleGiveXp}/>
+          <PlayerList players={items} deleteAction={handleDelete} giveXpAction={handleGiveXp} setCurrentPlayerAction={setCurrentPlayer} currentPlayer={currentPlayer}/>
         </div>
         <div>
-          <PlayerForm submitAction={handleSubmit} playerProps={playerProps}/>
+          <PlayerForm submitAction={handleSubmit} playerProps={currentPlayer} updateAction={handleUpdatePlayer}/>
         </div>
         
       </section>
@@ -130,7 +146,6 @@ function App() {
           <svg className="icon" role="presentation" aria-hidden="true">
             <use href="/icons.svg#social-icon"></use>
           </svg>
-          
         </div>
       </section>
 
