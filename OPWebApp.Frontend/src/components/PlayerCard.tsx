@@ -61,7 +61,6 @@ const PlayerCard: React.FC<PlayerCardProps> = props => {
 	}
 
 	const headerButtonStyle: CSSProperties = {
-		marginLeft: 'auto',
 		marginRight: '10px'
 	}
 
@@ -69,7 +68,7 @@ const PlayerCard: React.FC<PlayerCardProps> = props => {
 		fontSize: '1em',
 		fontWeight: 'bold',
 		marginBottom: '5px',
-		marginRight: '10px',
+		marginRight: 'auto',
 		overflow: 'hidden',
 		textOverflow: 'ellipsis',
 		whiteSpace: 'nowrap',
@@ -100,7 +99,7 @@ const PlayerCard: React.FC<PlayerCardProps> = props => {
 				<button onClick={handleGiveXp} style={headerButtonStyle}>Give XP</button>
 				<button onClick={handleDelete} style={headerButtonStyle}>Delete</button>
 			</div>
-			<div>
+			<div style={{textOverflow: 'wrap'}}>
 				<p>Level: {playerProps.level}</p>
 				<p>XP: {playerProps.xp}</p>
 				<p>{playerProps.description}</p>

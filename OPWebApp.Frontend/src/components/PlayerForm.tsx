@@ -27,6 +27,13 @@ const PlayerForm: React.FC<PlayerFormProps> = (props) => {
 		}
 	}, [props.playerProps])
 
+	useEffect(() => {
+		if (props.playerProps == null) {
+			setNameValue('');
+			setDescriptionValue('')
+		}
+	}, [props.playerProps])
+
 
 	const outerStyle : CSSProperties = {
 		display: 'flex',
@@ -38,6 +45,7 @@ const PlayerForm: React.FC<PlayerFormProps> = (props) => {
 		border: '1px solid #ccc',
 		borderRadius: '8px',
 		width: '400px',
+		marginBottom: '20px',
 	}
 	const labelStyle : CSSProperties = {
 		display: 'block',

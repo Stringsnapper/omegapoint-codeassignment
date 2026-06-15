@@ -129,25 +129,13 @@ function App() {
           <PlayerList players={items} deleteAction={handleDelete} giveXpAction={handleGiveXp} setCurrentPlayerAction={setCurrentPlayer} currentPlayer={currentPlayer}/>
         </div>
         <div>
+          <button onClick={() => setCurrentPlayer(null)} style={{ marginBottom: '10px', width: '440px'}}>New Player</button>
           <PlayerForm submitAction={handleSubmit} playerProps={currentPlayer} updateAction={handleUpdatePlayer}/>
         </div>
         
       </section>
 
       <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-        </div>
-      </section>
 
       <div className="ticks"></div>
       <section id="spacer">
