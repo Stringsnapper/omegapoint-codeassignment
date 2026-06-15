@@ -25,7 +25,9 @@ builder.Services.AddHttpLogging(o => { });
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
-builder.Services.AddDbContext<PlayerDb>(opt => opt.UseInMemoryDatabase("Players"));
+builder.Services.AddDbContext<PlayerDb>(opt => 
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("Players") ?? throw new InvalidOperationException("Connection string 'Players' not found")));
+builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddScoped<PlayerService>();
 
 var app = builder.Build();
