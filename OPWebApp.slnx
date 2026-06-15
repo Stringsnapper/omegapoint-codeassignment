@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="OPWebApp.Server.Tests/OPWebApp.Server.Tests.csproj" Id="98268457-eeb2-4c6f-90fb-4b740b911d86" />
   <Project Path="OPWebApp.Server/OPWebApp.Server.csproj" />
 </Solution>

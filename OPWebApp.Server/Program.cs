@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using OPWebApp.Server.Database;
+using OPWebApp.Server.Services;
 
 var allowSpecificOriginsPolicy = "_allowSpecificOrigins";
 
@@ -25,6 +26,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddDbContext<PlayerDb>(opt => opt.UseInMemoryDatabase("Players"));
+builder.Services.AddScoped<PlayerService>();
 
 var app = builder.Build();
 

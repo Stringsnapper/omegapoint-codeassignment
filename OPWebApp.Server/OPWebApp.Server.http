@@ -29,15 +29,15 @@ Content-Type: application/json
 
 ###
 
-GET {{OPWebApp.Server_HostAddress}}/api/players/{6393006f-50f8-418b-a92f-8db75d7edd24}
+GET {{OPWebApp.Server_HostAddress}}/api/players/482cf139-1cdb-4747-bfa2-84e51621e92b
 
 ###
 
-PUT {{OPWebApp.Server_HostAddress}}/api/players/{6393006f-50f8-418b-a92f-8db75d7edd24}
+PUT {{OPWebApp.Server_HostAddress}}/api/players/{482cf139-1cdb-4747-bfa2-84e51621e92b}
 Content-Type: application/json
 
 {
-  "id": "6393006f-50f8-418b-a92f-8db75d7edd24",
+  "id": "482cf139-1cdb-4747-bfa2-84e51621e92b",
   "name": "XTerminator",
   "level": 6,
   "xp": 789254,
@@ -56,7 +56,7 @@ Content-Type: application/json
 
 ###
 
-PATCH {{OPWebApp.Server_HostAddress}}/api/players/7d7d02af-c41e-4a13-8cd9-0273dac78601
+PATCH {{OPWebApp.Server_HostAddress}}/api/players/{5779d7bf-d6c2-4a8b-aa68-a13c49f54693}/xp
 Content-Type: application/json
 {
   "xp": 789254

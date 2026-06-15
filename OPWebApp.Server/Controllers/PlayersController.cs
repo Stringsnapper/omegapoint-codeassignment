@@ -1,21 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OPWebApp.Server.Database;
 using OPWebApp.Server.Models;
 using OPWebApp.Server.Models.Dtos;
+using OPWebApp.Server.Services;
 
 namespace OPWebApp.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PlayersController : ControllerBase
+    public class PlayersController(PlayerService playerService) : ControllerBase
     {
-        private readonly PlayerDb _context;
-
-        public PlayersController(PlayerDb context)
-        {
-            _context = context;
-        }
+        private readonly PlayerService _playerService = playerService;
 
         /// <summary>
         /// Returns all players in the database.
@@ -24,52 +21,46 @@ namespace OPWebApp.Server.Controllers
         /// <returns>All available Player data or an empty collection if no player data is available.</returns>
         /// <response code="200">Returns a collection of Player data.</response>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PlayerModel>>> GetPlayers()
+        public async Task<ActionResult<PlayerDto[]>> GetPlayers()
         {
-            return await _context.Players.ToListAsync();
+            return await _playerService.GetPlayersAsync().ConfigureAwait(false);
         }
 
         // GET: api/players/9b624c6f-084a-40e4-98e4-de28e198cd84
         [HttpGet("{id}")]
-        public async Task<ActionResult<PlayerModel>> GetPlayerModel(Guid id)
+        public async Task<ActionResult<PlayerDto>> GetPlayer(Guid id)
         {
-            var playerModel = await _context.Players.FindAsync(id);
+           var responseDto = await _playerService.GetPlayerByIdAsync(id).ConfigureAwait(false);
 
-            if (playerModel == null)
-            {
-                return NotFound();
-            }
-
-            return playerModel;
+            return responseDto == null ? NotFound() : responseDto;
         }
 
 
         // PUT: api/players/9b624c6f-084a-40e4-98e4-de28e198cd84
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPlayerModel(Guid id, PlayerModel playerModel)
+        public async Task<IActionResult> PutPlayerModel(Guid id, PlayerDto playerDto)
         {
-            if (id != playerModel.Id)
+            if (id != playerDto.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(playerModel).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                await _playerService.UpdatePlayerAsync(id, playerDto);
+            }
+            catch (PlayerNotFoundException)
+            {
+                return NotFound();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PlayerModelExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return Conflict();
+            }
+            catch (Exception)
+            {
+                return Problem();
             }
 
             return NoContent();
@@ -83,45 +74,42 @@ namespace OPWebApp.Server.Controllers
         /// <returns>IActionResult with status 204 on success, or status 404 </returns>
         // PATCH: api/9b624c6f-084a-40e4-98e4-de28e198cd84/xp
         [HttpPatch("{id}/xp")]
-        public async Task<IActionResult> ModifyPlayerXp(Guid id, ModifyPlayerXpRequestDto dto)
+        public async Task<IActionResult> ModifyPlayerXp(Guid id, [FromBody] ModifyPlayerXpRequestDto dto)
         {
-            var playerModel = await _context.Players.FindAsync(id);
-
-            if (playerModel == null)
+            try
+            {
+                await _playerService.UpdatePlayerXp(id, dto);
+            }
+            catch (PlayerNotFoundException)
             {
                 return NotFound();
             }
-
-            playerModel.XP = dto.Xp;
-            _context.Entry(playerModel).State = EntityState.Modified;
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PlayerModelExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return Conflict();
             }
+            catch (Exception)
+            {
+                return Problem();
+            }
+
             return NoContent();
         }
 
         // POST: api/players
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<PlayerModel>> PostPlayerModel(CreatePlayerRequestDto playerDto)
+        public async Task<ActionResult<PlayerDto>> PostPlayer(CreatePlayerRequestDto playerRequestDto)
         {
-            var playerModel = new PlayerModel { Name = playerDto.Name, Description = playerDto.Description };
-            _context.Players.Add(playerModel);
-            await _context.SaveChangesAsync();
+            try
+            {
+                var responseDto = await _playerService.CreatePlayerAsync(playerRequestDto).ConfigureAwait(false);
+                return CreatedAtAction("GetPlayer", new { id = responseDto.Id }, responseDto);
+            }
+            catch (Exception)
+            {
+                return Problem();
+            }
 
-            return CreatedAtAction("GetPlayerModel", new { id = playerModel.Id }, playerModel);
         }
 
         // DELETE: api/players/9b624c6f-084a-40e4-98e4-de28e198cd84
@@ -129,21 +117,19 @@ namespace OPWebApp.Server.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePlayerModel(Guid id)
         {
-            var playerModel = await _context.Players.FindAsync(id);
-            if (playerModel == null)
+            try
+            {
+                await _playerService.DeletePlayerAsync(id).ConfigureAwait(false);
+                return NoContent();
+            } catch (PlayerNotFoundException)
             {
                 return NotFound();
+            } catch
+            {
+                return Problem();
             }
-
-            _context.Players.Remove(playerModel);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
 
-        private bool PlayerModelExists(Guid id)
-        {
-            return _context.Players.Any(e => e.Id == id);
-        }
+        
     }
 }
