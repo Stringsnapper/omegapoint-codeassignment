@@ -1,8 +1,5 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using OPWebApp.Server.Database;
-using OPWebApp.Server.Models;
 using OPWebApp.Server.Models.Dtos;
 using OPWebApp.Server.Services;
 

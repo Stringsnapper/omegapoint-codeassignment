@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OPWebApp.Server.Models;
 
-namespace OPWebApp.Server.Database
+namespace OPWebApp.Server.Repositories
 {
 
     public class PlayerDb : DbContext
