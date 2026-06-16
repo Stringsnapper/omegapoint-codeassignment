@@ -14,16 +14,21 @@ function App() {
   const [currentPlayer, setCurrentPlayer] = useState<PlayerProps>(null);
 
   useEffect(() => {
+    let isMounted = true;
     console.log("Fetching players...");
     fetch("http://localhost:5267/api/players", { method: "GET" })
       .then(response => {
         return response.json();
       })
       .then(data => {
-        setItems(data);
+        if(isMounted) {
+          setItems(data);
+        }
       })
+      return () => {
+        isMounted = false;
+      }
   }, [refresh]);
-
   const handleSubmit = async (playerProps: PlayerProps) : Promise<boolean> => {
     console.debug("Submitting player:", playerProps);
     var success = false;
@@ -37,7 +42,7 @@ function App() {
     .then(response => {
       if (response.ok) {
         console.debug("Player created successfully");
-        setRefresh(!refresh);
+        setRefresh(prev => !prev);
         success = true;
       }
       else {
@@ -55,7 +60,7 @@ function App() {
       .then(response =>  {
         if (response.ok) {
           console.debug("Player deleted successfully");
-          setRefresh(!refresh);
+          setRefresh(prev => !prev);
           success = true;
         }
         else {
@@ -78,7 +83,7 @@ function App() {
     .then(response => {
       if (response.ok) {
         console.debug("Player updated successfully");
-        setRefresh(!refresh);
+        setRefresh(prev => !prev);
         success = true;
       }
       else {
@@ -103,7 +108,7 @@ function App() {
     .then(response => {
       if (response.ok) {
         console.debug(`Player gained ${amount} xp!`);
-        setRefresh(!refresh);
+        setRefresh(prev => !prev);
         success = true;
       }
       else {

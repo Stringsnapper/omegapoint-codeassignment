@@ -1,5 +1,6 @@
 import { useEffect, useState, type CSSProperties } from "react";
 import type { PlayerProps } from "../interfaces/Player";
+import DOMPurify from 'dompurify';
 
 interface PlayerFormProps {
 	submitAction: (playerProps:PlayerProps) => Promise<boolean>;
@@ -88,7 +89,7 @@ const PlayerForm: React.FC<PlayerFormProps> = (props) => {
 
 	const handleSubmit = async (event: React.SubmitEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		var success = await props.submitAction({name: nameValue, description: descriptionValue} as PlayerProps);
+		var success = await props.submitAction({name: DOMPurify.sanitize(nameValue), description: DOMPurify.sanitize(descriptionValue)} as PlayerProps);
 		console.debug("Submit action returned:", success);
 		if (success) {
 			setNameValue('');
@@ -97,8 +98,8 @@ const PlayerForm: React.FC<PlayerFormProps> = (props) => {
 	};
 
 	const handleUpdatePlayer = async () => {
-		props.playerProps.name = nameValue;
-		props.playerProps.description = descriptionValue;
+		props.playerProps.name = DOMPurify.sanitize(nameValue);
+		props.playerProps.description = DOMPurify.sanitize(descriptionValue);
 		var success = await props.updateAction(props.playerProps);
 		console.debug("Update action returned:", success);
 		if (success) {
